@@ -36,10 +36,9 @@ Adafruit_BNO055 bno = Adafruit_BNO055(55);
 
 /* Sensor state tracking */
 imu::Vector<3> DIRECTION_UP = imu::Vector<3>(0, 0, 1);
-imu::Vector<3> DIRECTION_LEFT = imu::Vector<3>(1, 0, 0);
+imu::Vector<3> DIRECTION_LEFT = imu::Vector<3>(-1, 0, 0);
 imu::Vector<3> DIRECTION_FORWARD = imu::Vector<3>(0, 1, 0);
 imu::Vector<3> lastSideDirection = imu::Vector<3>(0, 0, 1);
-byte lastDirection;
 
 /**************************************************************************/
 /*
@@ -286,50 +285,47 @@ imu::Vector<3> getUpVector(imu::Quaternion rot)
 
 void loop(void)
 {
-  /* Get a new sensor event */
-  sensors_event_t event;
-  bno.getEvent(&event);
-
-
-  // Display the floating point data
-  Serial.print(" ");
-  Serial.print(event.orientation.x, 4);
-  Serial.print(" ");
-  Serial.print(event.orientation.y, 4);
-  Serial.print(" ");
-  Serial.print(event.orientation.z, 4);
-
   // Quaternion data
   imu::Quaternion quat = bno.getQuat();
-  imu::Vector<3> up = getUpVector(quat);
-  double dot = DIRECTION_UP.dot(up);
-  Serial.print(" ");
-  Serial.print((float)dot);
+  imu::Vector<3> sensorUp = getUpVector(quat);
+  double upDot = DIRECTION_UP.dot(sensorUp);
+  double leftDot = DIRECTION_LEFT.dot(sensorUp);
+  double fwdDot = DIRECTION_FORWARD.dot(sensorUp);
+  byte dir; // 0 = up, 1 = down, 2 = left, 3 = right, 4 = forward, 5 = back
 
-  if (dot > 0.5)
+  if (upDot > 0.5)
   {
-    lastDirection = 3;
+    dir = 0;
   }
-  else if (dot < -0.5)
+  else if (upDot < -0.5)
   {
-    lastDirection = 1;
+    dir = 1;
+  }
+  else if (leftDot > 0.5)
+  {
+    dir = 2;
+  }
+  else if (leftDot < -0.5)
+  {
+    dir = 3;
+  }
+  else if (fwdDot > 0.5)
+  {
+    dir = 4;
   }
   else
   {
-    double leftDot = DIRECTION_LEFT.dot(up);
-    double fwdDot = DIRECTION_FORWARD.dot(up);
-
-    if (leftDot + fwdDot > 0.0)
-    {
-      lastDirection = 2;
-    }
-    else
-    {
-      lastDirection = 4;
-    }
+    dir = 5;
   }
+
   Serial.print(" ");
-  Serial.print(lastDirection);
+  Serial.print(upDot);
+  Serial.print(" ");
+  Serial.print(leftDot);
+  Serial.print(" ");
+  Serial.print(fwdDot);
+  Serial.print(" ");
+  Serial.print(dir);
   
   /* New line for the next sample */
   Serial.println("");
