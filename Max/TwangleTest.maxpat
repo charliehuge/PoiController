@@ -9,7 +9,7 @@
 			"modernui" : 1
 		}
 ,
-		"rect" : [ 59.0, 104.0, 1056.0, 707.0 ],
+		"rect" : [ 34.0, 79.0, 840.0, 783.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -39,13 +39,52 @@
 		"boxes" : [ 			{
 				"box" : 				{
 					"id" : "obj-22",
-					"maxclass" : "message",
+					"maxclass" : "newobj",
 					"numinlets" : 2,
 					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 789.0, 291.0, 50.0, 22.0 ],
+					"outlettype" : [ "signal" ],
+					"patching_rect" : [ 522.0, 530.0, 29.5, 22.0 ],
 					"style" : "",
-					"text" : "5"
+					"text" : "*~"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-21",
+					"maxclass" : "newobj",
+					"numinlets" : 6,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 430.0, 501.0, 96.0, 22.0 ],
+					"style" : "",
+					"text" : "scale -1. 1. 1. 0."
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-20",
+					"maxclass" : "newobj",
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"outlettype" : [ "signal" ],
+					"patching_rect" : [ 476.0, 530.0, 29.5, 22.0 ],
+					"style" : "",
+					"text" : "*~"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-19",
+					"maxclass" : "newobj",
+					"numinlets" : 6,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 697.0, 299.0, 109.0, 22.0 ],
+					"style" : "",
+					"text" : "scale -1. 1. 0. 100."
 				}
 
 			}
@@ -53,167 +92,45 @@
 				"box" : 				{
 					"id" : "obj-18",
 					"maxclass" : "newobj",
-					"numinlets" : 2,
+					"numinlets" : 6,
 					"numoutlets" : 1,
-					"outlettype" : [ "int" ],
-					"patching_rect" : [ 746.0, 253.0, 29.5, 22.0 ],
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 593.0, 299.0, 96.0, 22.0 ],
 					"style" : "",
-					"text" : "+ 1"
+					"text" : "scale -1. 1. 1. 4."
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"clipheight" : 29.0,
-					"data" : 					{
-						"clips" : [ 							{
-								"filename" : "up.wav",
-								"filekind" : "audiofile",
-								"loop" : 0,
-								"content_state" : 								{
-									"pitchshift" : [ 1.0 ],
-									"slurtime" : [ 0.0 ],
-									"play" : [ 0 ],
-									"originallength" : [ 0.0, "ticks" ],
-									"formant" : [ 1.0 ],
-									"basictuning" : [ 440 ],
-									"originaltempo" : [ 120.0 ],
-									"mode" : [ "basic" ],
-									"timestretch" : [ 0 ],
-									"originallengthms" : [ 0.0 ],
-									"speed" : [ 1.0 ],
-									"followglobaltempo" : [ 0 ],
-									"pitchcorrection" : [ 0 ],
-									"quality" : [ "basic" ],
-									"formantcorrection" : [ 0 ]
-								}
-
-							}
-, 							{
-								"filename" : "down.wav",
-								"filekind" : "audiofile",
-								"loop" : 0,
-								"content_state" : 								{
-									"pitchshift" : [ 1.0 ],
-									"slurtime" : [ 0.0 ],
-									"play" : [ 0 ],
-									"originallength" : [ 0.0, "ticks" ],
-									"formant" : [ 1.0 ],
-									"basictuning" : [ 440 ],
-									"originaltempo" : [ 120.0 ],
-									"mode" : [ "basic" ],
-									"timestretch" : [ 0 ],
-									"originallengthms" : [ 0.0 ],
-									"speed" : [ 1.0 ],
-									"followglobaltempo" : [ 0 ],
-									"pitchcorrection" : [ 0 ],
-									"quality" : [ "basic" ],
-									"formantcorrection" : [ 0 ]
-								}
-
-							}
-, 							{
-								"filename" : "left.wav",
-								"filekind" : "audiofile",
-								"loop" : 0,
-								"content_state" : 								{
-									"pitchshift" : [ 1.0 ],
-									"slurtime" : [ 0.0 ],
-									"play" : [ 0 ],
-									"originallength" : [ 0.0, "ticks" ],
-									"formant" : [ 1.0 ],
-									"basictuning" : [ 440 ],
-									"originaltempo" : [ 120.0 ],
-									"mode" : [ "basic" ],
-									"timestretch" : [ 0 ],
-									"originallengthms" : [ 0.0 ],
-									"speed" : [ 1.0 ],
-									"followglobaltempo" : [ 0 ],
-									"pitchcorrection" : [ 0 ],
-									"quality" : [ "basic" ],
-									"formantcorrection" : [ 0 ]
-								}
-
-							}
-, 							{
-								"filename" : "right.wav",
-								"filekind" : "audiofile",
-								"loop" : 0,
-								"content_state" : 								{
-									"pitchshift" : [ 1.0 ],
-									"slurtime" : [ 0.0 ],
-									"play" : [ 0 ],
-									"originallength" : [ 0.0, "ticks" ],
-									"formant" : [ 1.0 ],
-									"basictuning" : [ 440 ],
-									"originaltempo" : [ 120.0 ],
-									"mode" : [ "basic" ],
-									"timestretch" : [ 0 ],
-									"originallengthms" : [ 0.0 ],
-									"speed" : [ 1.0 ],
-									"followglobaltempo" : [ 0 ],
-									"pitchcorrection" : [ 0 ],
-									"quality" : [ "basic" ],
-									"formantcorrection" : [ 0 ]
-								}
-
-							}
-, 							{
-								"filename" : "forward.wav",
-								"filekind" : "audiofile",
-								"loop" : 0,
-								"content_state" : 								{
-									"pitchshift" : [ 1.0 ],
-									"slurtime" : [ 0.0 ],
-									"play" : [ 0 ],
-									"originallength" : [ 0.0, "ticks" ],
-									"formant" : [ 1.0 ],
-									"basictuning" : [ 440 ],
-									"originaltempo" : [ 120.0 ],
-									"mode" : [ "basic" ],
-									"timestretch" : [ 0 ],
-									"originallengthms" : [ 0.0 ],
-									"speed" : [ 1.0 ],
-									"followglobaltempo" : [ 0 ],
-									"pitchcorrection" : [ 0 ],
-									"quality" : [ "basic" ],
-									"formantcorrection" : [ 0 ]
-								}
-
-							}
-, 							{
-								"filename" : "back.wav",
-								"filekind" : "audiofile",
-								"loop" : 0,
-								"content_state" : 								{
-									"pitchshift" : [ 1.0 ],
-									"slurtime" : [ 0.0 ],
-									"play" : [ 0 ],
-									"originallength" : [ 0.0, "ticks" ],
-									"formant" : [ 1.0 ],
-									"basictuning" : [ 440 ],
-									"originaltempo" : [ 120.0 ],
-									"mode" : [ "basic" ],
-									"timestretch" : [ 0 ],
-									"originallengthms" : [ 0.0 ],
-									"speed" : [ 1.0 ],
-									"followglobaltempo" : [ 0 ],
-									"pitchcorrection" : [ 0 ],
-									"quality" : [ "basic" ],
-									"formantcorrection" : [ 0 ]
-								}
-
-							}
- ]
-					}
-,
 					"id" : "obj-16",
-					"maxclass" : "playlist~",
-					"numinlets" : 1,
-					"numoutlets" : 5,
-					"outlettype" : [ "signal", "signal", "signal", "", "dictionary" ],
-					"patching_rect" : [ 741.0, 319.0, 150.0, 180.0 ],
-					"style" : ""
+					"maxclass" : "newobj",
+					"numinlets" : 6,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 481.0, 299.0, 103.0, 22.0 ],
+					"style" : "",
+					"text" : "scale -1. 1. 1. 0.1"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"bgmode" : 0,
+					"border" : 0,
+					"clickthrough" : 0,
+					"enablehscroll" : 0,
+					"enablevscroll" : 0,
+					"id" : "obj-15",
+					"lockeddragscroll" : 0,
+					"maxclass" : "bpatcher",
+					"name" : "Twangle.maxpat",
+					"numinlets" : 4,
+					"numoutlets" : 2,
+					"offset" : [ 0.0, 0.0 ],
+					"outlettype" : [ "signal", "signal" ],
+					"patching_rect" : [ 476.0, 333.0, 264.0, 144.0 ],
+					"viewvisibility" : 1
 				}
 
 			}
@@ -407,28 +324,6 @@
 			}
 , 			{
 				"box" : 				{
-					"bgmode" : 0,
-					"border" : 0,
-					"clickthrough" : 0,
-					"enablehscroll" : 0,
-					"enablevscroll" : 0,
-					"extract" : 1,
-					"id" : "obj-118",
-					"lockeddragscroll" : 0,
-					"maxclass" : "bpatcher",
-					"name" : "bp.Pan Mixer.maxpat",
-					"numinlets" : 8,
-					"numoutlets" : 2,
-					"offset" : [ 0.0, 0.0 ],
-					"outlettype" : [ "signal", "signal" ],
-					"patching_rect" : [ 6.0, 486.0, 395.0, 217.0 ],
-					"varname" : "bp.Pan Mixer",
-					"viewvisibility" : 1
-				}
-
-			}
-, 			{
-				"box" : 				{
 					"id" : "obj-117",
 					"maxclass" : "button",
 					"numinlets" : 1,
@@ -566,12 +461,12 @@
 					"id" : "obj-17",
 					"lockeddragscroll" : 0,
 					"maxclass" : "bpatcher",
-					"name" : "ReceiveOrientation.maxpat",
-					"numinlets" : 1,
+					"name" : "BaseStationCommunication.maxpat",
+					"numinlets" : 0,
 					"numoutlets" : 4,
 					"offset" : [ 0.0, 0.0 ],
-					"outlettype" : [ "float", "float", "float", "int" ],
-					"patching_rect" : [ 4.0, 3.0, 399.0, 32.0 ],
+					"outlettype" : [ "", "", "", "" ],
+					"patching_rect" : [ 3.490906, 2.0, 483.0, 35.0 ],
 					"viewvisibility" : 1
 				}
 
@@ -597,46 +492,10 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-22", 0 ],
-					"disabled" : 0,
-					"hidden" : 0,
-					"source" : [ "obj-11", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
 					"destination" : [ "obj-117", 0 ],
 					"disabled" : 0,
 					"hidden" : 0,
 					"source" : [ "obj-111", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-22", 0 ],
-					"disabled" : 0,
-					"hidden" : 0,
-					"source" : [ "obj-117", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-119", 1 ],
-					"disabled" : 0,
-					"hidden" : 0,
-					"source" : [ "obj-118", 1 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-119", 0 ],
-					"disabled" : 0,
-					"hidden" : 0,
-					"source" : [ "obj-118", 0 ]
 				}
 
 			}
@@ -651,15 +510,6 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-22", 0 ],
-					"disabled" : 0,
-					"hidden" : 0,
-					"source" : [ "obj-13", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
 					"destination" : [ "obj-13", 0 ],
 					"disabled" : 0,
 					"hidden" : 0,
@@ -669,16 +519,25 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-118", 1 ],
+					"destination" : [ "obj-20", 1 ],
 					"disabled" : 0,
 					"hidden" : 0,
-					"source" : [ "obj-16", 1 ]
+					"source" : [ "obj-15", 0 ]
 				}
 
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-118", 0 ],
+					"destination" : [ "obj-22", 1 ],
+					"disabled" : 0,
+					"hidden" : 0,
+					"source" : [ "obj-15", 1 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-15", 0 ],
 					"disabled" : 0,
 					"hidden" : 0,
 					"source" : [ "obj-16", 0 ]
@@ -687,10 +546,37 @@
 			}
 , 			{
 				"patchline" : 				{
+					"destination" : [ "obj-16", 0 ],
+					"disabled" : 0,
+					"hidden" : 0,
+					"source" : [ "obj-17", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
 					"destination" : [ "obj-18", 0 ],
 					"disabled" : 0,
 					"hidden" : 0,
-					"source" : [ "obj-17", 3 ]
+					"source" : [ "obj-17", 1 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-19", 0 ],
+					"disabled" : 0,
+					"hidden" : 0,
+					"source" : [ "obj-17", 2 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-21", 0 ],
+					"disabled" : 0,
+					"hidden" : 0,
+					"source" : [ "obj-17", 0 ]
 				}
 
 			}
@@ -750,10 +636,19 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-22", 1 ],
+					"destination" : [ "obj-15", 1 ],
 					"disabled" : 0,
 					"hidden" : 0,
 					"source" : [ "obj-18", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-15", 3 ],
+					"disabled" : 0,
+					"hidden" : 0,
+					"source" : [ "obj-19", 0 ]
 				}
 
 			}
@@ -768,7 +663,34 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-16", 0 ],
+					"destination" : [ "obj-119", 0 ],
+					"disabled" : 0,
+					"hidden" : 0,
+					"source" : [ "obj-20", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-20", 0 ],
+					"disabled" : 0,
+					"hidden" : 0,
+					"source" : [ "obj-21", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-22", 0 ],
+					"disabled" : 0,
+					"hidden" : 0,
+					"source" : [ "obj-21", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-119", 1 ],
 					"disabled" : 0,
 					"hidden" : 0,
 					"source" : [ "obj-22", 0 ]
@@ -795,28 +717,10 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-22", 0 ],
-					"disabled" : 0,
-					"hidden" : 0,
-					"source" : [ "obj-5", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
 					"destination" : [ "obj-5", 0 ],
 					"disabled" : 0,
 					"hidden" : 0,
 					"source" : [ "obj-6", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-22", 0 ],
-					"disabled" : 0,
-					"hidden" : 0,
-					"source" : [ "obj-7", 0 ]
 				}
 
 			}
@@ -901,96 +805,26 @@
 				}
 
 			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-22", 0 ],
-					"disabled" : 0,
-					"hidden" : 0,
-					"source" : [ "obj-9", 0 ]
-				}
-
-			}
  ],
 		"parameters" : 		{
-			"obj-118::obj-104" : [ "ch8_mute", "Mute", 0 ],
-			"obj-118::obj-55" : [ "ch4_pan", "Pan", 0 ],
-			"obj-118::obj-105" : [ "ch5_level", "5", 0 ],
-			"obj-118::obj-53" : [ "ch3_mute", "Mute", 0 ],
-			"obj-118::obj-63" : [ "ch4_mute", "Mute", 0 ],
-			"obj-118::obj-64" : [ "ch3_level", "3", 0 ],
-			"obj-118::obj-73" : [ "ch5_mute", "Mute", 0 ],
-			"obj-118::obj-106" : [ "ch5_pan", "Pan", 0 ],
-			"obj-118::obj-22" : [ "ch1_pan", "Pan", 0 ],
-			"obj-118::obj-96" : [ "ch6_pan", "Pan", 0 ],
-			"obj-118::obj-42" : [ "ch2_level", "2", 0 ],
-			"obj-118::obj-23" : [ "ch1_level", "1", 0 ],
-			"obj-118::obj-37" : [ "Mute", "Mute", 0 ],
-			"obj-118::obj-43" : [ "ch2_pan", "Pan", 0 ],
-			"obj-118::obj-86" : [ "ch7_pan", "Pan", 0 ],
-			"obj-118::obj-41" : [ "ch2_mute", "Mute", 0 ],
-			"obj-118::obj-28" : [ "ch1_mute", "Mute", 0 ],
-			"obj-118::obj-74" : [ "ch8_level", "8", 0 ],
-			"obj-118::obj-84" : [ "ch6_mute", "Mute", 0 ],
-			"obj-118::obj-85" : [ "ch7_level", "7", 0 ],
-			"obj-118::obj-65" : [ "ch3_pan", "Pan", 0 ],
-			"obj-118::obj-75" : [ "ch8_pan", "Pan", 0 ],
-			"obj-118::obj-94" : [ "ch7_mute", "Mute", 0 ],
-			"obj-118::obj-54" : [ "ch4_level", "4", 0 ],
-			"obj-118::obj-95" : [ "ch6_level", "6", 0 ]
+			"obj-15::obj-17" : [ "live.dial[1]", "pitch", 0 ],
+			"obj-17::obj-24" : [ "live.text", "live.text", 0 ],
+			"obj-15::obj-59" : [ "speeeeeeed", "speed", 0 ],
+			"obj-17::obj-29" : [ "live.text[1]", "live.text[1]", 0 ],
+			"obj-15::obj-63" : [ "live.dial", "t mult", 0 ],
+			"obj-15::obj-79" : [ "live.dial[2]", "spread", 0 ]
 		}
 ,
 		"dependency_cache" : [ 			{
-				"name" : "ReceiveOrientation.maxpat",
+				"name" : "BaseStationCommunication.maxpat",
 				"bootpath" : "/_projects/PoiController/Max/Communication",
 				"type" : "JSON",
 				"implicit" : 1
 			}
 , 			{
-				"name" : "bp.Pan Mixer.maxpat",
-				"bootpath" : "C74:/packages/BEAP/clippings/BEAP/Mixers",
+				"name" : "Twangle.maxpat",
+				"bootpath" : "/_projects/PoiController/Max/Instruments",
 				"type" : "JSON",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "M4L.pan1~.maxpat",
-				"bootpath" : "C74:/patchers/m4l/Tools resources",
-				"type" : "JSON",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "up.wav",
-				"bootpath" : "/_projects/PoiController/AudioFiles",
-				"type" : "WAVE",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "down.wav",
-				"bootpath" : "/_projects/PoiController/AudioFiles",
-				"type" : "WAVE",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "left.wav",
-				"bootpath" : "/_projects/PoiController/AudioFiles",
-				"type" : "WAVE",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "right.wav",
-				"bootpath" : "/_projects/PoiController/AudioFiles",
-				"type" : "WAVE",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "forward.wav",
-				"bootpath" : "/_projects/PoiController/AudioFiles",
-				"type" : "WAVE",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "back.wav",
-				"bootpath" : "/_projects/PoiController/AudioFiles",
-				"type" : "WAVE",
 				"implicit" : 1
 			}
  ],

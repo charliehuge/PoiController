@@ -32,6 +32,11 @@
 /* Set the delay between fresh samples */
 #define BNO055_SAMPLERATE_DELAY_MS (10)
 
+const byte CODE_START = '!';
+const byte CODE_STOP = '?';
+
+bool enabled = false;
+
 Adafruit_BNO055 bno = Adafruit_BNO055(55);
 
 /* Sensor state tracking */
@@ -285,6 +290,26 @@ imu::Vector<3> getUpVector(imu::Quaternion rot)
 
 void loop(void)
 {
+  // listen for an application to request transmission
+  while (Serial.available() > 0)
+  {
+    byte currentByte = Serial.read();
+
+    if (currentByte == CODE_START)
+    {
+      enabled = true;
+    }
+    else if (currentByte == CODE_STOP)
+    {
+      enabled = false;
+    }
+  }
+
+  if (!enabled)
+  {
+    return;
+  }
+
   // Quaternion data
   imu::Quaternion quat = bno.getQuat();
   imu::Vector<3> sensorUp = getUpVector(quat);
