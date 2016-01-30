@@ -5,7 +5,7 @@
 			"major" : 7,
 			"minor" : 1,
 			"revision" : 0,
-			"architecture" : "x64",
+			"architecture" : "x86",
 			"modernui" : 1
 		}
 ,
@@ -201,7 +201,7 @@
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 343.0, 544.0, 50.0, 22.0 ],
 					"style" : "",
-					"text" : "62"
+					"text" : "61"
 				}
 
 			}
@@ -531,7 +531,7 @@
 				"box" : 				{
 					"allowdrag" : 0,
 					"id" : "obj-4",
-					"items" : [ "Bluetooth-Incoming-Port", ",", "CharliesiPhone-Wireless", ",", "usbmodem1421" ],
+					"items" : [ "Bluetooth-Incoming-Port", ",", "CharliesiPhone-Wireless", ",", "usbmodem1411" ],
 					"maxclass" : "umenu",
 					"numinlets" : 1,
 					"numoutlets" : 3,
@@ -1208,8 +1208,8 @@
 			}
  ],
 		"parameters" : 		{
-			"obj-29" : [ "live.text[1]", "live.text[1]", 0 ],
-			"obj-24" : [ "live.text", "live.text", 0 ]
+			"obj-24" : [ "live.text", "live.text", 0 ],
+			"obj-29" : [ "live.text[1]", "live.text[1]", 0 ]
 		}
 ,
 		"dependency_cache" : [  ],

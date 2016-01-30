@@ -1,6 +1,9 @@
 #include <SPI.h>
 #include "RF24.h"
 
+#define DEBUG_PRINTS 0
+
+const int REMOTE_ID_LENGTH = 256;
 const unsigned long TIMEOUT = 200000; // 200ms
 
 /* Hardware configuration: Set up nRF24L01 radio on SPI bus plus pins 5 & 6 */
@@ -11,26 +14,34 @@ RF24 radio(5, 6);
 const byte remotePipe[6] = "r____";
 const byte basePipe[6] = "b____";
 
-byte nextAvailableId = 0;
+// you can register up to 256 remotes, because why not?
+long remoteIds[REMOTE_ID_LENGTH];
+int remotesRegistered = 0; 
 
+// TODO: figure out how to not have to copy this
 struct remoteData
 {
-  byte id; 
+  long id;
   double upDot;
   double leftDot;
   double fwdDot;
   byte dir;
 } payload;
 
-void setup() 
+void initRadio()
 {
-  Serial.begin(115200);  
-  
   radio.begin();
   radio.setPALevel(RF24_PA_LOW);
   radio.openWritingPipe(basePipe);
   radio.openReadingPipe(1, remotePipe);
   radio.startListening();
+}
+
+void setup() 
+{
+  Serial.begin(115200);  
+
+  initRadio();
 }
 
 void loop() 
@@ -45,18 +56,43 @@ void loop()
   {
     radio.read(&payload, sizeof(payload));
 
-    // if this remote doesn't have an id, give it one
-    if (payload.id == 0)
+    // if we haven't heard from this radio before, add it to the list
+    int foundId = -1;
+    
+    for (int i = 0; i < remotesRegistered; ++i)
     {
-      payload.id = ++nextAvailableId;
+      if (remoteIds[i] == payload.id)
+      {
+        foundId = i;
+        break;
+      }
+    }
+
+    if (foundId < 0)
+    {
+      foundId = remotesRegistered;
+      remoteIds[remotesRegistered] = payload.id;
+      ++remotesRegistered;
+
+      if (DEBUG_PRINTS)
+      {
+        Serial.print("Found a new remote with id: ");
+        Serial.println(payload.id);
+        Serial.print("Total remotes: ");
+        Serial.print(remotesRegistered);
+      }
     }
   
     radio.stopListening();
-  
-    radio.write(&payload, sizeof(payload));
+
+    // acknowledge receipt
+    // TODO: status codes if needed
+    radio.write(0, sizeof(byte));
     
     radio.startListening();
-  
+
+    Serial.print(foundId);
+    Serial.print(" ");
     Serial.print(payload.upDot, 4);
     Serial.print(" ");
     Serial.print(payload.leftDot, 4);
