@@ -19,28 +19,21 @@ const byte basePipe[6] = "b____";
 
 Adafruit_BNO055 bno = Adafruit_BNO055(55);
 
-/* Sensor state tracking */
 imu::Vector<3> DIRECTION_UP = imu::Vector<3>(0, 0, 1);
 imu::Vector<3> DIRECTION_LEFT = imu::Vector<3>(-1, 0, 0);
 imu::Vector<3> DIRECTION_FORWARD = imu::Vector<3>(0, 1, 0);
-imu::Vector<3> lastSideDirection = imu::Vector<3>(0, 0, 1);
+const double TRIGGER_THRESHOLD = 0.75;
+const double TRIGGER_RESET = 0.5;
+bool triggerUpReady, triggerDownReady;
 
 struct remoteData
 {
   long id;
+  bool triggerUpBeat;
+  bool triggerDownBeat;
+  double accelerationMagnitude;
   double upDot;
-  double leftDot;
-  double fwdDot;
-  byte dir;
 } payload;
-
-imu::Vector<3> getUpVector(imu::Quaternion rot)
-{
-  return imu::Vector<3>(
-    2.0*rot.x()*rot.y() - 2.0*rot.z()*rot.w(), 
-    1.0 - 2.0*rot.x()*rot.x() - 2.0*rot.z()*rot.z(), 
-    2.0*rot.y()*rot.z() + 2.0*rot.x()*rot.w());
-}
 
 void initRadio()
 {
@@ -87,39 +80,58 @@ void initImu()
   Serial.println("Done initializing BNO055");
 }
 
+imu::Vector<3> getUpVector(imu::Quaternion rot)
+{
+  return imu::Vector<3>(
+    2.0*rot.x()*rot.y() - 2.0*rot.z()*rot.w(), 
+    1.0 - 2.0*rot.x()*rot.x() - 2.0*rot.z()*rot.z(), 
+    2.0*rot.y()*rot.z() + 2.0*rot.x()*rot.w());
+}
+
 void updateSensorData()
 {
-  imu::Quaternion quat = bno.getQuat();
-  imu::Vector<3> sensorUp = getUpVector(quat);
-  payload.upDot = DIRECTION_UP.dot(sensorUp);
-  payload.leftDot = DIRECTION_LEFT.dot(sensorUp);
-  payload.fwdDot = DIRECTION_FORWARD.dot(sensorUp);
-  payload.dir; // 0 = up, 1 = down, 2 = left, 3 = right, 4 = forward, 5 = back
+  // find out if we should trigger an up or down beat
+  imu::Quaternion orientation = bno.getQuat();
+  imu::Vector<3> upVector = getUpVector(orientation);
+  double upDot = upVector.dot(DIRECTION_UP);
+  bool doTrigger = false;
 
-  if (payload.upDot > 0.5)
+  if (triggerUpReady)
   {
-    payload.dir = 0;
-  }
-  else if (payload.upDot < -0.5)
-  {
-    payload.dir = 1;
-  }
-  else if (payload.leftDot > 0.5)
-  {
-    payload.dir = 2;
-  }
-  else if (payload.leftDot < -0.5)
-  {
-    payload.dir = 3;
-  }
-  else if (payload.fwdDot > 0.5)
-  {
-    payload.dir = 4;
+    doTrigger = (upDot > TRIGGER_THRESHOLD);
+    payload.triggerUpBeat = doTrigger;
+
+    if (doTrigger)
+    {
+      triggerUpReady = false;
+    }
   }
   else
   {
-    payload.dir = 5;
+    payload.triggerUpBeat = false;
+    triggerUpReady = (upDot < TRIGGER_RESET);
   }
+
+  if (triggerDownReady)
+  {
+    doTrigger = (upDot < -TRIGGER_THRESHOLD);
+    payload.triggerDownBeat = doTrigger;
+
+    if (doTrigger)
+    {
+      triggerDownReady = false;
+    }
+  }
+  else
+  {
+    payload.triggerDownBeat = false;
+    triggerDownReady = (upDot > -TRIGGER_RESET);
+  }
+
+  payload.upDot = upDot;
+
+  // get the spin speed (acceleration magnitude)
+  payload.accelerationMagnitude = bno.getVector(Adafruit_BNO055::VECTOR_LINEARACCEL).magnitude();
 }
 
 void sendPayload(unsigned long startTime)
@@ -161,6 +173,8 @@ void setup()
   initRadio();
 
   initImu();
+
+  triggerUpReady = triggerDownReady = true;
 }
 
 void loop() 
@@ -168,8 +182,6 @@ void loop()
   unsigned long startTime = micros();
 
   updateSensorData();
-
-  Serial.println(payload.dir);
 
   sendPayload(startTime);
 

@@ -1,9 +1,7 @@
 #include <SPI.h>
 #include "RF24.h"
 
-#define DEBUG_PRINTS 0
-
-const int REMOTE_ID_LENGTH = 256;
+const int MAX_REMOTES = 8;
 const unsigned long TIMEOUT = 200000; // 200ms
 
 /* Hardware configuration: Set up nRF24L01 radio on SPI bus plus pins 5 & 6 */
@@ -14,18 +12,17 @@ RF24 radio(5, 6);
 const byte remotePipe[6] = "r____";
 const byte basePipe[6] = "b____";
 
-// you can register up to 256 remotes, because why not?
-long remoteIds[REMOTE_ID_LENGTH];
+long remoteIds[MAX_REMOTES];
 int remotesRegistered = 0; 
 
 // TODO: figure out how to not have to copy this
 struct remoteData
 {
   long id;
+  bool triggerUpBeat;
+  bool triggerDownBeat;
+  double accelerationMagnitude;
   double upDot;
-  double leftDot;
-  double fwdDot;
-  byte dir;
 } payload;
 
 void initRadio()
@@ -35,6 +32,20 @@ void initRadio()
   radio.openWritingPipe(basePipe);
   radio.openReadingPipe(1, remotePipe);
   radio.startListening();
+}
+
+void processAndSendRemoteData(int remoteId)
+{  
+  Serial.print(remoteId);
+  Serial.print(" ");
+  Serial.print(payload.accelerationMagnitude);
+  Serial.print(" ");
+  Serial.print(payload.triggerUpBeat);
+  Serial.print(" ");
+  Serial.print(payload.triggerDownBeat);
+  Serial.print(" ");
+  Serial.print(payload.upDot);
+  Serial.println("");
 }
 
 void setup() 
@@ -70,17 +81,14 @@ void loop()
 
     if (foundId < 0)
     {
+      if (remotesRegistered >= MAX_REMOTES)
+      {
+        continue;
+      }
+      
       foundId = remotesRegistered;
       remoteIds[remotesRegistered] = payload.id;
       ++remotesRegistered;
-
-      if (DEBUG_PRINTS)
-      {
-        Serial.print("Found a new remote with id: ");
-        Serial.println(payload.id);
-        Serial.print("Total remotes: ");
-        Serial.print(remotesRegistered);
-      }
     }
   
     radio.stopListening();
@@ -91,14 +99,6 @@ void loop()
     
     radio.startListening();
 
-    Serial.print(foundId);
-    Serial.print(" ");
-    Serial.print(payload.upDot, 4);
-    Serial.print(" ");
-    Serial.print(payload.leftDot, 4);
-    Serial.print(" ");
-    Serial.print(payload.fwdDot, 4);
-    Serial.print(" ");
-    Serial.println(payload.dir);
+    processAndSendRemoteData(foundId);
   }
 }
