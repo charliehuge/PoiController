@@ -6,8 +6,14 @@
 #include <utility/imumaths.h>
 #include <EEPROM.h>
 
-const unsigned long TIMEOUT = 200000; // microseconds
-const unsigned long SAMPLING_RATE = 10000; // microseconds, note that if this gets longer than about 10ms, switch to using regular delay
+struct __attribute__ ((__packed__))
+{
+  uint32_t id;
+  bool triggerUp;
+  bool triggerDown;
+  float upDot;
+  float accMag;
+} payload;
 
 /* Hardware configuration: Set up nRF24L01 radio on SPI bus plus pins 5 & 6 */
 RF24 radio(5, 6);
@@ -22,25 +28,20 @@ Adafruit_BNO055 bno = Adafruit_BNO055(55);
 imu::Vector<3> DIRECTION_UP = imu::Vector<3>(0, 0, 1);
 imu::Vector<3> DIRECTION_LEFT = imu::Vector<3>(-1, 0, 0);
 imu::Vector<3> DIRECTION_FORWARD = imu::Vector<3>(0, 1, 0);
-const double TRIGGER_THRESHOLD = 0.75;
-const double TRIGGER_RESET = 0.5;
-bool triggerUpReady, triggerDownReady;
+const float TRIGGER_THRESHOLD = 0.75;
+const float TRIGGER_RESET = 0.5;
 
-struct remoteData
-{
-  long id;
-  bool triggerUpBeat;
-  bool triggerDownBeat;
-  double accelerationMagnitude;
-  double upDot;
-} payload;
+bool triggerUpReady;
+bool triggerDownReady;
 
 void initRadio()
 {
   radio.begin();
   radio.setPALevel(RF24_PA_LOW);
+  radio.setAutoAck(false);
   radio.openWritingPipe(remotePipe);
   radio.openReadingPipe(1, basePipe);
+  radio.startListening();
 }
 
 /*
@@ -88,18 +89,18 @@ imu::Vector<3> getUpVector(imu::Quaternion rot)
     2.0*rot.y()*rot.z() + 2.0*rot.x()*rot.w());
 }
 
-void updateSensorData()
+void sendSensorPayload()
 {
   // find out if we should trigger an up or down beat
   imu::Quaternion orientation = bno.getQuat();
   imu::Vector<3> upVector = getUpVector(orientation);
-  double upDot = upVector.dot(DIRECTION_UP);
+  payload.upDot = (float)upVector.dot(DIRECTION_UP);
   bool doTrigger = false;
 
   if (triggerUpReady)
   {
-    doTrigger = (upDot > TRIGGER_THRESHOLD);
-    payload.triggerUpBeat = doTrigger;
+    doTrigger = (payload.upDot > TRIGGER_THRESHOLD);
+    payload.triggerUp = doTrigger;
 
     if (doTrigger)
     {
@@ -108,14 +109,14 @@ void updateSensorData()
   }
   else
   {
-    payload.triggerUpBeat = false;
-    triggerUpReady = (upDot < TRIGGER_RESET);
+    payload.triggerUp = false;
+    triggerUpReady = (payload.upDot < TRIGGER_RESET);
   }
 
   if (triggerDownReady)
   {
-    doTrigger = (upDot < -TRIGGER_THRESHOLD);
-    payload.triggerDownBeat = doTrigger;
+    doTrigger = (payload.upDot < -TRIGGER_THRESHOLD);
+    payload.triggerDown = doTrigger;
 
     if (doTrigger)
     {
@@ -124,73 +125,40 @@ void updateSensorData()
   }
   else
   {
-    payload.triggerDownBeat = false;
-    triggerDownReady = (upDot > -TRIGGER_RESET);
+    payload.triggerDown = false;
+    triggerDownReady = (payload.upDot > -TRIGGER_RESET);
   }
-
-  payload.upDot = upDot;
 
   // get the spin speed (acceleration magnitude)
-  payload.accelerationMagnitude = bno.getVector(Adafruit_BNO055::VECTOR_LINEARACCEL).magnitude();
-}
+  payload.accMag = (float)bno.getVector(Adafruit_BNO055::VECTOR_LINEARACCEL).magnitude();
 
-void sendPayload(unsigned long startTime)
-{
   radio.stopListening();
-
-  if (!radio.write(&payload, sizeof(payload)))
-  {
-    Serial.println(F("Failed sending data"));
-    radio.startListening();
-  }
-  else
-  {
-    radio.startListening();
-
-    bool timedOut = false;
-  
-    while (!radio.available())
-    {
-      if (micros() < startTime || micros() - startTime > TIMEOUT)
-      {
-        Serial.println(F("Timed out"));
-        timedOut = true;
-        return;
-      }
-    }
-
-    byte statusByte;
-    radio.read(&statusByte, sizeof(byte));
-    Serial.print(F("Heard back: "));
-    Serial.println(statusByte);
-  }
+  radio.write(&payload, sizeof(payload));
+  radio.startListening();
 }
 
 void setup() 
 {
   Serial.begin(115200);  
-
   initRadio();
-
   initImu();
-
   triggerUpReady = triggerDownReady = true;
 }
 
 void loop() 
 {  
-  unsigned long startTime = micros();
+  bool gotPing = false;
 
-  updateSensorData();
-
-  sendPayload(startTime);
-
-  // if we heard back in less time than the sampling rate, AWESOME!
-  // but let's not overdo it. Wait until we've caught up with the sampling rate
-  unsigned long elapsed = micros() - startTime;
-
-  if (micros() > startTime && elapsed < SAMPLING_RATE)
+  while (radio.available())
   {
-    delayMicroseconds(SAMPLING_RATE - elapsed);
+    byte ping;
+    radio.read(&ping, sizeof(ping));
+    gotPing = true;
   }
+
+  if (gotPing)
+  {
+    sendSensorPayload();
+  }
+
 }
